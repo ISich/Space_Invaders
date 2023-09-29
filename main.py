@@ -1,8 +1,9 @@
-from GraphicalInterface import GraphicalInterface
+from ChooseOptions import ChooseOptionsMenu
 
 
 def main():
-    gui = GraphicalInterface()
+    menu = ChooseOptionsMenu()
+    menu.run()
 
 
 if __name__ == "__main__":

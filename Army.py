@@ -4,16 +4,9 @@ import pygame
 
 class Army:
     def __init__(self, x_start, y_start, x_count, y_count, x_jump, y_jump,
-                 enemy_width, enemy_height, enemy_color):
-        self.x_start = x_start
-        self.y_start = y_start
+                 enemy_width, enemy_height):
         self.x_count = x_count
         self.y_count = y_count
-        self.x_jump = x_jump
-        self.y_jump = y_jump
-        self.enemy_width = enemy_width
-        self.enemy_height = enemy_height
-        self.enemy_color = enemy_color
         self.step_down_count = 5
         self.curr_step_down = 0
         self.direction = 0
@@ -23,7 +16,7 @@ class Army:
             line = []
             for x in range(x_count):
                 enemy = Enemy(x_start+x*(x_jump+enemy_width), y_start+y*(y_jump+enemy_height),
-                                  enemy_width, enemy_height)
+                              enemy_width, enemy_height)
                 line.append(enemy)
                 self.sprites.add(enemy)
             self.army.append(line)
