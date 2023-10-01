@@ -4,7 +4,7 @@ import pygame
 
 class Army:
     def __init__(self, x_start, y_start, x_count, y_count, x_jump, y_jump,
-                 enemy_width, enemy_height):
+                 enemy_width, enemy_height, player):
         self.x_count = x_count
         self.y_count = y_count
         self.step_down_count = 5
@@ -12,6 +12,7 @@ class Army:
         self.direction = 0
         self.army = []
         self.sprites = pygame.sprite.Group()
+        self.player = player
         for y in range(y_count):
             line = []
             for x in range(x_count):
@@ -59,7 +60,7 @@ class Army:
 
     def move_down(self, distance, player_border):
         if not self.check_player_border(distance, player_border):
-            exit()
+            self.player.hp = 0
         for enemy_line in self.army:
             for enemy in enemy_line:
                 if enemy != -1:
@@ -91,3 +92,10 @@ class Army:
                         self.army[line][enemy].kill()
                         self.army[line][enemy] = -1
                         break
+
+    def check_death(self):
+        for line in self.army:
+            for enemy in line:
+                if enemy != -1:
+                    return True
+        return False

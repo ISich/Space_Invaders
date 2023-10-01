@@ -7,7 +7,7 @@ class Enemy(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.width = width
-        self.height= height
+        self.height = height
         self.image = pygame.image.load("enemy.png")
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]

@@ -27,7 +27,12 @@ class Player(pygame.sprite.Sprite):
             window.blit(heart, (now_x, y))
 
     def damage(self):
-        pass
+        self.hp -= 1
+        heart = self.hearts.pop(0)
+        del heart
+
+    def check_death(self):
+        return self.hp != 0
 
     def update(self):
         keys = pygame.key.get_pressed()

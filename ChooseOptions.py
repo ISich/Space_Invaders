@@ -4,11 +4,15 @@ from tkinter import *
 
 class ChooseOptionsMenu:
     def __init__(self):
+        self.window = None
+        self.records = ["-", "-", "-"]
+        self.make_options_menu()
+
+    def make_options_menu(self):
         self.window = Tk()
         self.window.resizable(False, False)
         self.window.grab_set()
         self.window.geometry("350x250")
-        self.records = [0, 0, 0]
         self.window.title("Space Invaders")
         self.draw_menu()
 
@@ -71,11 +75,14 @@ class ChooseOptionsMenu:
         self.window.destroy()
         borders = [0, 1, 1]
         enemy_count = [15, 25, 30]
-        game = GraphicalInterface(enemy_count[picked_level], borders[picked_level])
+        game = GraphicalInterface(enemy_count[picked_level], borders[picked_level], picked_level, self)
         game.start()
 
     def check_new_record(self, level: int, new_time):
-        self.records[level] = max(self.records[level], new_time)
+        if self.records[level] != "-":
+            self.records[level] = max(self.records[level], round(new_time, 3))
+        else:
+            self.records[level] = round(new_time, 3)
 
     def run(self):
         self.window.mainloop()
