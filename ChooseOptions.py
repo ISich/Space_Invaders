@@ -5,8 +5,15 @@ from tkinter import *
 class ChooseOptionsMenu:
     def __init__(self):
         self.window = None
-        self.records = ["-", "-", "-"]
+        self.records = []
+        self.parse_records()
         self.make_options_menu()
+
+    def parse_records(self):
+        with open("records.txt") as f:
+            records = f.readlines()
+            for i in range(len(records)):
+                self.records.append(records[i][:-1])
 
     def make_options_menu(self):
         self.window = Tk()
@@ -75,14 +82,20 @@ class ChooseOptionsMenu:
         self.window.destroy()
         borders = [0, 1, 1]
         enemy_count = [15, 25, 30]
-        game = GraphicalInterface(enemy_count[picked_level], borders[picked_level], picked_level, self)
+        game = GraphicalInterface(enemy_count[picked_level], borders[picked_level], picked_level,
+                                  self)
         game.start()
 
     def check_new_record(self, level: int, new_time):
-        if self.records[level] != "-":
-            self.records[level] = max(self.records[level], round(new_time, 3))
-        else:
+        if self.records[level] == "-" or float(self.records[level]) > new_time:
             self.records[level] = round(new_time, 3)
+            self.save_record()
+
+    def save_record(self):
+        with open("records.txt", "w") as f:
+            f.truncate()
+            for i in range(len(self.records)):
+                f.write(f"{self.records[i]}\n")
 
     def run(self):
         self.window.mainloop()
