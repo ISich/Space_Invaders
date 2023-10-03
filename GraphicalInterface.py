@@ -28,7 +28,9 @@ class GraphicalInterface:
         self.bullets = []
 
         self.shoot_delay_cur = 0
+        self.shoot_enemy = 0
         self.shoot_delay = 7
+        self.shoot_enemy_delay = 10
         self.run = True
         self.time = 100
         self.start_time = time.time()
@@ -47,7 +49,14 @@ class GraphicalInterface:
                                            5, 5, 1, (0, 255, 0), 5, self.win_height))
                 self.shoot_delay_cur = 1
 
-            self.shoot_delay_cur = (self.shoot_delay_cur + (self.shoot_delay_cur != 0)) % self.shoot_delay
+            self.shoot_delay_cur = (self.shoot_delay_cur + (self.shoot_delay_cur != 0)) \
+                                   % self.shoot_delay
+
+            self.shoot_enemy = (self.shoot_enemy + 1) % self.shoot_enemy_delay
+            if self.shoot_enemy == 0:
+                point = self.army.choose_random_enemy()
+                self.bullets.append(Bullet(point[0], point[1],
+                                           5, 5, -1, (255, 0, 0), 5, self.win_height))
 
             self.window.fill((0, 0, 0))
             pygame.draw.rect(self.window, (0, 100, 230), pygame.Rect(0, 500, 500, 150))

@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 
@@ -21,16 +23,16 @@ class Enemy(pygame.sprite.Sprite):
         return self.rect.x + self.rect.width + distance <= x_border
 
     def move_right(self, distance):
-        self.rect.x += distance
+        self.update(self.x + distance, self.y)
 
     def check_x_border_left(self, distance, x_border):
         return self.rect.x - distance >= x_border
 
     def move_left(self, distance):
-        self.rect.x -= distance
+        self.update(self.x - distance, self.y)
 
     def check_player_border(self, distance, player_border):
         return self.rect.y + self.rect.height + distance <= player_border
 
     def move_down(self, distance):
-        self.rect.y += distance
+        self.update(self.x, self.y + distance )

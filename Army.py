@@ -1,3 +1,5 @@
+import random
+
 from Enemy import Enemy
 import pygame
 
@@ -92,6 +94,14 @@ class Army:
                         self.army[line][enemy].kill()
                         self.army[line][enemy] = -1
                         break
+
+    def choose_random_enemy(self):
+        column = random.randint(0, self.x_count - 1)
+        for line in range(self.y_count-1, -1, -1):
+            if self.army[line][column] != -1:
+                enemy = self.army[line][column]
+                return [enemy.x + enemy.width // 2, self.army[line][column].y + enemy.height + 5]
+        return self.choose_random_enemy()
 
     def check_death(self):
         for line in self.army:
