@@ -33,5 +33,11 @@ class Bullet(object):
                 return True
         return False
 
+    def check_block(self, block):
+        if self.x < block.x + block.width and self.x + self.width > block.x:
+            if self.y < block.y + block.height and self.y + self.height > block.y:
+                return True
+        return False
+
     def is_bullet_inside(self):
         return 0 <= self.y + self.height and self.y <= self.health_bar_border - self.height

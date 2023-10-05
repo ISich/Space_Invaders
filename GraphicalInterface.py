@@ -4,6 +4,7 @@ import pygame
 from Army import Army
 from Bullet import Bullet
 from Player import Player
+from Block import Block
 
 
 class GraphicalInterface:
@@ -25,12 +26,16 @@ class GraphicalInterface:
         self.player = Player(x_player, y_player, width_player, height_player, self.win_width)
         self.army = Army(x_army, y_army, x_count_army, y_count_army, x_army_jump, y_army_jump,
                          width_enemy, height_army, self.player)
-        self.bullets = []
 
+        self.bullets = []
         self.shoot_delay_cur = 0
         self.shoot_enemy = 0
-        self.shoot_delay = 7
-        self.shoot_enemy_delay = 10
+        self.shoot_delay = 10
+        self.shoot_enemy_delay = 15
+
+        self.blocks = [Block(50, 350, 80, 30, 3, (255, 255, 255)),
+                       Block(450-80, 350, 80, 30, 3, (255, 255, 255))]
+
         self.run = True
         self.time = 100
         self.start_time = time.time()
@@ -66,9 +71,11 @@ class GraphicalInterface:
 
             self.army.move(self.player.speed, 20, 500 - 20, self.player.rect.y)
             self.check_army()
+            self.check_blocks()
             self.check_player()
             self.draw_army()
             self.draw_bullets()
+            self.draw_blocks()
             self.move_bullets()
             self.del_leave_bullets()
 
@@ -84,9 +91,19 @@ class GraphicalInterface:
         for bullet in self.bullets:
             bullet.draw(self.window)
 
+    def draw_blocks(self):
+        for block in self.blocks:
+            block.draw(self.window)
+
     def move_bullets(self):
         for bullet in self.bullets:
             bullet.fly()
+
+    def del_leave_bullets(self):
+        for bullet in range(len(self.bullets)):
+            if not self.bullets[bullet].is_bullet_inside():
+                del self.bullets[bullet]
+                break
 
     def check_army(self):
         self.army.check_bullets(self.bullets)
@@ -101,11 +118,20 @@ class GraphicalInterface:
                     break
             self.run = self.player.check_death()
 
-    def del_leave_bullets(self):
-        for bullet in range(len(self.bullets)):
-            if not self.bullets[bullet].is_bullet_inside():
-                del self.bullets[bullet]
+    def check_blocks(self):
+        flag = False
+        for block in range(len(self.blocks)):
+            if flag:
                 break
+            for bullet in range(len(self.bullets)):
+                if self.bullets[bullet].check_block(self.blocks[block]):
+                    flag = True
+                    self.blocks[block].damage()
+                    if not self.blocks[block].check_death():
+                        del self.blocks[block]
+                    del self.bullets[bullet]
+                    break
+
 
     def show_result_window(self):
         finish_time = time.time() - self.start_time
