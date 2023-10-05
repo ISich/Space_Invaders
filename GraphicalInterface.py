@@ -45,8 +45,8 @@ class GraphicalInterface:
                     self.run = False
 
             if keys[pygame.K_SPACE] and self.shoot_delay_cur == 0:
-                self.bullets.append(Bullet(self.player.rect.x + self.player.rect.width // 2, self.player.rect.y,
-                                           5, 5, 1, (0, 255, 0), 5, self.win_height))
+                self.bullets.append(Bullet(self.player.rect.x + self.player.rect.width // 2, self.player.rect.y - 5,
+                                           5, 5, 1, (0, 255, 0), 5, self.win_height, 500))
                 self.shoot_delay_cur = 1
 
             self.shoot_delay_cur = (self.shoot_delay_cur + (self.shoot_delay_cur != 0)) \
@@ -56,7 +56,7 @@ class GraphicalInterface:
             if self.shoot_enemy == 0:
                 point = self.army.choose_random_enemy()
                 self.bullets.append(Bullet(point[0], point[1],
-                                           5, 5, -1, (255, 0, 0), 5, self.win_height))
+                                           5, 5, -1, (255, 0, 0), 5, self.win_height, 500))
 
             self.window.fill((0, 0, 0))
             pygame.draw.rect(self.window, (0, 100, 230), pygame.Rect(0, 500, 500, 150))
@@ -94,6 +94,11 @@ class GraphicalInterface:
 
     def check_player(self):
         if self.run:
+            for bullet in range(len(self.bullets)):
+                if self.bullets[bullet].check_player(self.player):
+                    self.player.damage()
+                    del self.bullets[bullet]
+                    break
             self.run = self.player.check_death()
 
     def del_leave_bullets(self):
