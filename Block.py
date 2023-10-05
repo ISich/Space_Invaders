@@ -8,10 +8,12 @@ class Block(object):
         self.width = width
         self.height = height
         self.hp = hp
+        self.colors = [(65, 65, 65), (135, 135, 135), (255, 255, 255)]
         self.color = color
 
     def damage(self):
         self.hp -= 1
+        self.color = self.colors[self.hp - 1]
 
     def check_death(self):
         return self.hp != 0

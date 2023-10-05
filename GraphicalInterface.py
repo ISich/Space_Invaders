@@ -12,7 +12,7 @@ class GraphicalInterface:
         pygame.init()
         self.win_width = 500
         self.win_height = 650
-        self.borders = borders_count
+        self.block_count = borders_count
         self.level = level
         self.choose_options = choose_options
         self.window = pygame.display.set_mode((self.win_width, self.win_height))
@@ -33,12 +33,19 @@ class GraphicalInterface:
         self.shoot_delay = 10
         self.shoot_enemy_delay = 15
 
-        self.blocks = [Block(50, 350, 80, 30, 3, (255, 255, 255)),
-                       Block(450-80, 350, 80, 30, 3, (255, 255, 255))]
-
+        self.blocks = self.place_blocks()
         self.run = True
         self.time = 100
         self.start_time = time.time()
+
+    def place_blocks(self):
+        blocks = []
+        xs = [50, 370, 250]
+        y, hp = 350, 3
+        width, height, color = 80, 30, (255, 255, 255)
+        for i in range(self.block_count):
+            blocks.append(Block(xs[i], y, width, height, hp, color))
+        return blocks
 
     def start(self):
         while self.run:

@@ -80,7 +80,7 @@ class ChooseOptionsMenu:
     def start_game(self, picked_level, window):
         window.destroy()
         self.window.destroy()
-        borders = [0, 1, 1]
+        borders = [0, 2, 3]
         enemy_count = [15, 25, 30]
         game = GraphicalInterface(enemy_count[picked_level], borders[picked_level], picked_level,
                                   self)
