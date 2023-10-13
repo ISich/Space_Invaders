@@ -21,22 +21,23 @@ class GraphicalInterface:
         x_player, y_player, width_player, height_player = 50, self.win_height-200, 40, 60
         x_army, y_army, x_count_army, y_count_army = 20, 20, 5, enemy_count // 5
         x_army_jump, y_army_jump, width_enemy, height_army = 20, 20, 30, 30
-        self.shoot_delay = 0
-
-        self.player = Player(x_player, y_player, width_player, height_player, self.win_width)
-        self.army = Army(x_army, y_army, x_count_army, y_count_army, x_army_jump, y_army_jump,
-                         width_enemy, height_army, self.player)
 
         self.bullets = []
         self.shoot_delay_cur = 0
         self.shoot_enemy = 0
         self.shoot_delay = 10
         self.shoot_enemy_delay = 15
+        self.bullets_speed = 4
+
+        self.player = Player(x_player, y_player, width_player, height_player, self.win_width, self.bullets_speed)
+        self.army = Army(x_army, y_army, x_count_army, y_count_army, x_army_jump, y_army_jump,
+                         width_enemy, height_army, self.player)
 
         self.blocks = self.place_blocks()
         self.run = True
         self.time = 100
         self.start_time = time.time()
+        self.pause = False
 
     def place_blocks(self):
         blocks = []
@@ -55,37 +56,42 @@ class GraphicalInterface:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
+            if keys[pygame.K_ESCAPE]:
+                self.pause = not self.pause
 
-            if keys[pygame.K_SPACE] and self.shoot_delay_cur == 0:
-                self.bullets.append(Bullet(self.player.rect.x + self.player.rect.width // 2, self.player.rect.y - 5,
-                                           5, 5, 1, (0, 255, 0), 5, self.win_height, 500))
-                self.shoot_delay_cur = 1
+            if not self.pause:
+                if keys[pygame.K_SPACE] and self.shoot_delay_cur == 0:
+                    self.bullets.append(Bullet(self.player.rect.x + self.player.rect.width // 2, self.player.rect.y - 5,
+                                               5, 5, 1, (0, 255, 0), self.bullets_speed, self.win_height,
+                                               500, self.player.bullet_direct))
+                    self.shoot_delay_cur = 1
 
-            self.shoot_delay_cur = (self.shoot_delay_cur + (self.shoot_delay_cur != 0)) \
-                                   % self.shoot_delay
+                self.shoot_delay_cur = (self.shoot_delay_cur + (self.shoot_delay_cur != 0)) \
+                                       % self.shoot_delay
 
-            self.shoot_enemy = (self.shoot_enemy + 1) % self.shoot_enemy_delay
-            if self.shoot_enemy == 0:
-                point = self.army.choose_random_enemy()
-                self.bullets.append(Bullet(point[0], point[1],
-                                           5, 5, -1, (255, 0, 0), 5, self.win_height, 500))
+                self.shoot_enemy = (self.shoot_enemy + 1) % self.shoot_enemy_delay
+                if self.shoot_enemy == 0:
+                    point = self.army.choose_random_enemy()
+                    self.bullets.append(Bullet(point[0], point[1],
+                                               5, 5, -1, (255, 0, 0), self.bullets_speed, self.win_height, 500, 0))
 
-            self.window.fill((0, 0, 0))
-            pygame.draw.rect(self.window, (0, 100, 230), pygame.Rect(0, 500, 500, 150))
-            self.player.draw_hearts(self.window)
-            self.player.update()
-            self.player.sprite.draw(self.window)
+                self.window.fill((0, 0, 0))
+                pygame.draw.rect(self.window, (0, 100, 230), pygame.Rect(0, 500, 500, 150))
+                self.player.draw_hearts(self.window)
+                self.player.update()
+                self.player.sprite.draw(self.window)
 
-            self.army.move(self.player.speed, 20, 500 - 20, self.player.rect.y)
-            self.check_army()
-            self.check_blocks()
-            self.check_player()
-            self.draw_army()
-            self.draw_bullets()
-            self.draw_blocks()
-            self.move_bullets()
-            self.del_leave_bullets()
-
+                self.army.move(self.player.speed, 20, 500 - 20, self.player.rect.y)
+                self.check_army()
+                self.check_blocks()
+                self.check_player()
+                self.draw_army()
+                self.draw_bullets()
+                self.draw_blocks()
+                self.move_bullets()
+                self.del_leave_bullets()
+            else:
+                pygame.draw.rect(self.window, (255, 255, 255), (100, 200, 300, 100))
             pygame.display.update()
 
         pygame.quit()
@@ -138,7 +144,6 @@ class GraphicalInterface:
                         del self.blocks[block]
                     del self.bullets[bullet]
                     break
-
 
     def show_result_window(self):
         finish_time = time.time() - self.start_time

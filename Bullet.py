@@ -2,19 +2,21 @@ import pygame
 
 
 class Bullet(object):
-    def __init__(self, x, y, width, height, direction, color, step, win_height, health_bar_border):
+    def __init__(self, x, y, width, height, direction, color, speed, win_height, health_bar_border, bullet_dir):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.direction = direction
         self.color = color
-        self.step = step
+        self.speed = speed
         self.win_height = win_height
         self.health_bar_border = health_bar_border
+        self.bullet_dir = bullet_dir
 
     def fly(self):
-        self.y -= self.direction * self.step
+        self.x += self.direction * self.bullet_dir
+        self.y -= self.direction * (self.speed - abs(self.bullet_dir))
 
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))

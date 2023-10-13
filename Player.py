@@ -2,7 +2,7 @@ import pygame
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, win_width):
+    def __init__(self, x, y, width, height, win_width, bullet_speed):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("player.png")
         self.rect = self.image.get_rect()
@@ -13,6 +13,8 @@ class Player(pygame.sprite.Sprite):
         self.height = height
         self.win_width = win_width
         self.speed = 5
+        self.bullet_speed = bullet_speed
+        self.bullet_direct = 0
         self.sprite = pygame.sprite.Group()
         self.sprite.add(self)
 
@@ -40,3 +42,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.x = max(self.rect.x - self.speed, 0)
         if keys[pygame.K_RIGHT]:
             self.rect.x = min(self.rect.x + self.speed, self.win_width)
+        if keys[pygame.K_a]:
+            self.bullet_direct = max(-self.bullet_speed, self.bullet_direct - 2)
+        if keys[pygame.K_d]:
+            self.bullet_direct = min(self.bullet_speed, self.bullet_direct + 2)
