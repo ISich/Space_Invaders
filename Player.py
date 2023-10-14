@@ -49,9 +49,9 @@ class Player(pygame.sprite.Sprite):
             self.arrow.rect.x = min(self.arrow.rect.x + self.speed, self.win_width)
         if keys[pygame.K_a]:
             self.bullet_direct = max(self.bullet_direct - 1, -1)
-            arrow = max(2, self.bullet_direct + 1)
+            arrow = self.bullet_direct + 1
             self.arrow.rotate(arrow)
         if keys[pygame.K_d]:
             self.bullet_direct = min(self.bullet_direct + 1, 1)
-            arrow = min(0, self.bullet_direct - 1)
+            arrow = self.bullet_direct + 1
             self.arrow.rotate(arrow)
