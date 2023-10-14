@@ -80,6 +80,7 @@ class GraphicalInterface:
                 self.player.draw_hearts(self.window)
                 self.player.update()
                 self.player.sprite.draw(self.window)
+                self.player.arrow.sprite.draw(self.window)
 
                 self.army.move(self.player.speed, 20, 500 - 20, self.player.rect.y)
                 self.check_army()
@@ -91,11 +92,16 @@ class GraphicalInterface:
                 self.move_bullets()
                 self.del_leave_bullets()
             else:
-                pygame.draw.rect(self.window, (255, 255, 255), (100, 200, 300, 100))
+                font = pygame.font.Font(None, 48)
+                text_surface = font.render("Игра остановлена", True, (255, 255, 255))
+                rect = text_surface.get_rect()
+                rect.center = (250, 250)
+                self.window.blit(text_surface, rect)
             pygame.display.update()
 
         pygame.quit()
-        self.show_result_window()
+        if not self.pause:
+            self.show_result_window()
 
     def draw_army(self):
         self.army.sprites.draw(self.window)

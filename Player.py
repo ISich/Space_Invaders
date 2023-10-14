@@ -1,9 +1,12 @@
 import pygame
 
+from Arrow import Arrow
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, win_width, bullet_speed):
         pygame.sprite.Sprite.__init__(self)
+        self.arrow = Arrow(x, y - 30)
         self.image = pygame.image.load("player.png")
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
@@ -40,9 +43,15 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.rect.x = max(self.rect.x - self.speed, 0)
+            self.arrow.rect.x = max(self.arrow.rect.x - self.speed, 0)
         if keys[pygame.K_RIGHT]:
             self.rect.x = min(self.rect.x + self.speed, self.win_width)
+            self.arrow.rect.x = min(self.arrow.rect.x + self.speed, self.win_width)
         if keys[pygame.K_a]:
-            self.bullet_direct = max(-self.bullet_speed, self.bullet_direct - 2)
+            self.bullet_direct = max(self.bullet_direct - 1, -1)
+            arrow = max(2, self.bullet_direct + 1)
+            self.arrow.rotate(arrow)
         if keys[pygame.K_d]:
-            self.bullet_direct = min(self.bullet_speed, self.bullet_direct + 2)
+            self.bullet_direct = min(self.bullet_direct + 1, 1)
+            arrow = min(0, self.bullet_direct - 1)
+            self.arrow.rotate(arrow)
