@@ -39,6 +39,9 @@ class GraphicalInterface:
         self.start_time = time.time()
         self.pause = False
 
+        self.shoot_sound = pygame.mixer.Sound("ShootSound.mp3")
+        pygame.mixer.music.load("Lvl_music.mp3")
+
     def place_blocks(self):
         blocks = []
         xs = [50, 370, 250]
@@ -49,6 +52,7 @@ class GraphicalInterface:
         return blocks
 
     def start(self):
+        pygame.mixer.music.play(10)
         while self.run:
             pygame.time.delay(self.time)
             keys = pygame.key.get_pressed()
@@ -57,10 +61,15 @@ class GraphicalInterface:
                 if event.type == pygame.QUIT:
                     self.run = False
             if keys[pygame.K_ESCAPE]:
+                if self.pause:
+                    pygame.mixer.music.unpause()
+                else:
+                    pygame.mixer.music.pause()
                 self.pause = not self.pause
 
             if not self.pause:
                 if keys[pygame.K_SPACE] and self.shoot_delay_cur == 0:
+                    self.shoot_sound.play()
                     self.bullets.append(Bullet(self.player.rect.x + self.player.rect.width // 2, self.player.rect.y - 5,
                                                5, 5, 1, (0, 255, 0), self.bullets_speed, self.win_height,
                                                500, self.player.bullet_direct))
