@@ -7,7 +7,7 @@ Space Invaders on python
 * * tkinter
 * Run main.py
 
-##Controlling
+## Controlling
 * <-/->: move left/right
 * Space: shoot
 * A/D: turn aim to left/right
